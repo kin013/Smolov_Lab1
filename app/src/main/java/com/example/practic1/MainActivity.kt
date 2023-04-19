@@ -8,17 +8,14 @@ import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
 
-    private fun getSortedWords (str:String):List<String>{
+    private fun getSortedWords(str: String): List<String> {
+        val vowels = setOf('a', 'e', 'i', 'o', 'u')
         return str.split(" ")
-            .map { it to it.sortWords() }
+            .map { word ->
+                word to word.count { it.toLowerCase() in vowels }.toFloat() / word.length.toFloat()
+            }
             .sortedBy { (_, proportion) -> proportion }
             .map { (word, _) -> word }
-    }
-
-    private fun String.sortWords ():Float{
-        val vowels = setOf('a', 'e', 'i', 'o', 'u')
-        val count = this.count { it.toLowerCase() in vowels }
-        return count.toFloat() / length.toFloat()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,8 +26,8 @@ class MainActivity : AppCompatActivity() {
         val txt = findViewById<TextView>(R.id.textViewMessage)
 
         btn.setOnClickListener {
-            val temps = "This is a sample text to demonstrate sorting of words based on the proportion of vowels"
-            txt.text = getSortedWords(temps).joinToString(" ")
+            val text = "This is a sample text to demonstrate sorting of words based on the proportion of vowels"
+            txt.text = getSortedWords(text).joinToString(" ")
         }
     }
 }
